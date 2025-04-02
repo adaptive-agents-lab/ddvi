@@ -1,0 +1,62 @@
+############ Environment ############
+env: "maze55"   # garnet / maze33 / cliffwalk
+discount: 0.99
+
+## garnet
+garnet_problem_num_states:  36
+garnet_problem_num_actions:  6
+garnet_problem_branching_factor:  12
+garnet_problem_non_zero_rewards: 12
+garnet_mdp_seed: 0
+garnet_pe_policy: "optimal"
+
+## maze33
+maze33_success_prob: 0.9
+maze33_pe_policy: "optimal"
+
+## maze55
+maze55_success_prob: 0.9
+maze55_pe_policy: [2, 2, 3, 0, 3, 0, 2, 1, 3, 2, 2, 2, 3, 3, 1, 0, 3, 0, 3, 3, 3, 3, 1, 1, 0] # array or "optimal"
+
+## cliffwalk
+cliffwalk_success_prob: 0.9
+cliffwalk_pe_policy: "optimal"
+
+############ Experiments ############
+
+## Exp PE Samples
+exp_pe_sample_num_iterations: 20000
+# exp_pe_sample_num_iterations: 100
+# exp_pe_sample_alphas: [0, 0.1, 0.5, 0.8, 1]
+exp_pe_sample_alphas: [0.1, 0.3, 0.5]
+exp_pe_sample_model_type: LocallySmoothed # LocallySmoothed
+
+exp_pe_lr_type: "ConstantAndDelay" #RescaledLinear, ConstantAndDelay
+exp_pe_td_learning_pe_lr: 0.3
+exp_pe_td_gamma: 0.999
+exp_pe_td_learning_pe_delay: 100000
+
+exp_pe_ddtd1_alpha: [0.8, 0.8, 0.8]
+exp_pe_ddtd1_update_Ehat_interval: 10
+exp_pe_ddtd1_lr: [0.3, 0.3, 0.3]
+exp_pe_ddtd1_gamma: [0.999, 0.999, 0.999]
+exp_pe_ddtd1_delay: 100000
+
+exp_pe_ddtd2_alpha: [0.7, 0.8, 0.8]
+exp_pe_ddtd2_update_Ehat_interval: 10
+exp_pe_ddtd2_lr: [0.3, 0.3, 0.3]
+exp_pe_ddtd2_gamma: [0.999, 0.999, 0.999]
+exp_pe_ddtd2_delay: 100000
+
+
+exp_pe_ddtd3_alpha: [0.9, 0.9, 0.9]
+exp_pe_ddtd3_update_Ehat_interval: 10
+exp_pe_ddtd3_lr: [0.07, 0.07, 0.07]
+exp_pe_ddtd3_gamma: [0.999, 0.999, 0.999]
+exp_pe_ddtd3_delay: 100000
+
+exp_pe_ddtd4_alpha: [0.9, 0.9, 0.9]
+exp_pe_ddtd4_update_Ehat_interval: 10
+exp_pe_ddtd4_lr: [0.07, 0.07, 0.07]
+exp_pe_ddtd4_gamma: [0.999, 0.999, 0.999]
+exp_pe_ddtd4_delay: 100000
