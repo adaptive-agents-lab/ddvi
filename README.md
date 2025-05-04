@@ -26,4 +26,4 @@ python exp_pe_sample.py config_maze55_0.95.yaml ALL --num_trials 20
 python exp_pe_sample.py config_chainwalk_0.95.yaml ALL --num_trials 20
 ```
 
-For plotting, use plotter_pe_main.py and ``plotter_pe_multimodel_error.py``. The path to data should be set in the ``exp_dir`` variable.
+For plotting, use ``plotter_pe_main.py`` and ``plotter_pe_multimodel_error.py``. The path to data should be set in the ``exp_dir`` variable.
