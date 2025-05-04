@@ -3,21 +3,31 @@ from environments import *
 from tqdm import tqdm
 from algorithms.ddvi import ddvi_for_control
 from algorithms.vi import value_iteration_control
-from algorithms.util import value_function, optimal_policy
+from algorithms.util import value_function, optimal_policy, value_function_policy
 
 np.random.seed(0)
 
-mdp = Garnet(0.9, 100, 8, 6, 10)
-# mdp=Maze55(0.9, 0.9)
-# mdp=RandomWalk(50, 2)
-# mdp = CliffWalkmodified(0.9, 0.995)
-
-
-
 r=0.995
+
+num_runs =1000
+num_states = 100
+num_actions = 8
+b_P = 6
+b_R = 10
+mdp = Garnet(0.9, num_states, num_actions, b_P, b_R)
+exp_name = f"Garnet-{num_states}-{b_P}-{b_R}-{r}"
+
+# num_runs =1
+# mdp = ChainWalk(50)
+# exp_name = f"ChainWalk"
+
+
+
+
+
+
+
 num_iter =100
-# power_iter = 200
-num_runs =100
 alpha = 0.99
 
 P=np.array(mdp.P())
@@ -30,7 +40,7 @@ v_errors = np.zeros((num_runs, 2, num_iter))
 
 for run_i in tqdm(range(num_runs)):
     if mdp.ENV_NAME == "Garnet":
-        mdp = Garnet(0.9, 100, 8, 6, 10)
+        mdp = Garnet(0.9, num_states, num_actions, b_P, b_R)
         P=np.array(mdp.P())
         R=np.array(mdp.R())
     V=np.zeros(P.shape[1]).reshape(P.shape[1],1)
@@ -38,7 +48,8 @@ for run_i in tqdm(range(num_runs)):
     V_traces[run_i, 0, :], _ = value_iteration_control(P, R, r, V, num_iter)
     V_traces[run_i, 1, :], _ = ddvi_for_control(P, R, r, V, num_iter)
 
-    opt = value_function(P, R, r, max_iteration=10000)
+    opt_policy = optimal_policy(P, R, r)
+    opt = value_function_policy(P, R, r, opt_policy).reshape(-1)
     v_errors[run_i] = np.linalg.norm(V_traces[run_i] - opt, ord=1, axis=-1) / np.linalg.norm(opt, ord=1)
 v_errors_mean = np.mean(v_errors, axis = 0)
 v_errors_se = np.std(v_errors, axis = 0) / np.sqrt(num_runs)
@@ -63,4 +74,5 @@ plt.ylabel('Normalized $\|V^{k} - V^{\star}\|_{1}$', fontsize=12)
 plt.legend(loc='lower left')
 plt.grid(alpha=0.3)
 
-plt.savefig(f'output/DDVI_control_{mdp.ENV_NAME}')
+plt.savefig(f'planning/output/DDVI_control_{exp_name}.png')
+plt.savefig(f'planning/output/DDVI_control_{exp_name}.pdf')

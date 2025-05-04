@@ -2,7 +2,9 @@ import matplotlib.pyplot as plt
 import numpy as np
 from algorithms.util import *
 
-r = 0.99
+# r = 0.95
+# r = 0.99
+r = 0.995
 
 power_iter = np.array([100, 100, 100, 100])
 qr_cost = power_iter * np.array([0, 2, 3, 4])

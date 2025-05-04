@@ -1,19 +1,32 @@
 import matplotlib.pyplot as plt
 from algorithms.util import *
 
-# error_time_traces = np.load(f"planning/output/Error_Comparison_Garnet_times.npy")
-# error_v_errors = np.load(f"planning/output/Error_Comparison_Garnet_errors.npy")
-horizon_time_traces = np.load(f"planning/output/Horizon_Comparison_Garnet.npy")
-size_time_traces = np.load(f"planning/output/Size_Comparison_Garnet.npy")
 
+horizon_time_traces = None
+size_time_traces = None
+
+# Figure 2
+# error_time_traces = np.load(f"planning/output/Error_Comparison_Garnet-200-2-20-0.995_times.npy")
+# error_v_errors = np.load(f"planning/output/Error_Comparison_Garnet-200-2-20-0.995_errors.npy")
+# horizon_time_traces = np.load(f"planning/output/Horizon_Comparison_Garnet.npy")
+# size_time_traces = np.load(f"planning/output/Size_Comparison_Garnet.npy")
+
+# Figure 10
+# error_time_traces = np.load(f"planning/output/Error_Comparison_Garnet-50-40-50-0.995_times.npy")
+# error_v_errors = np.load(f"planning/output/Error_Comparison_Garnet-50-40-50-0.995_errors.npy")
+
+# Figure 11
 # error_time_traces = np.load(f"planning/output/Error_Comparison_Maze55_times.npy")
 # error_v_errors = np.load(f"planning/output/Error_Comparison_Maze55_errors.npy")
 
-# error_time_traces = np.load(f"planning/output/Error_Comparison_CliffWalkmodified_times.npy")
-# error_v_errors = np.load(f"planning/output/Error_Comparison_CliffWalkmodified_errors.npy")
+# Figure 12
+# error_time_traces = np.load(f"planning/output/Error_Comparison_ChainWalk_times.npy")
+# error_v_errors = np.load(f"planning/output/Error_Comparison_ChainWalk_errors.npy")
 
-error_time_traces = np.load(f"planning/output/Error_Comparison_ChainWalk_times.npy")
-error_v_errors = np.load(f"planning/output/Error_Comparison_ChainWalk_errors.npy")
+# Figure 13
+error_time_traces = np.load(f"planning/output/Error_Comparison_CliffWalkmodified_times.npy")
+error_v_errors = np.load(f"planning/output/Error_Comparison_CliffWalkmodified_errors.npy")
+
 
 
 
@@ -61,7 +74,7 @@ plot_with_shades(ax1, x, error_v_errors_mean[7, x], error_v_errors_se[7, x], col
 ax1.set_xlabel('Iterations (k)')
 ax1.set_yscale('log')
 ax1.set_ylim(1e-10, 1.1)
-ax1.set_xlim(0, 2000)
+ax1.set_xlim(0, 1000)
 ax1.set_ylabel(' Normalized $\|\|V^{k} - V^{\pi}\|\|_{1}$', labelpad=0)
 ax1.grid(alpha=0.3)
 
@@ -93,52 +106,54 @@ ax2.set_ylabel(' Normalized $\|\|V^{k} - V^{\pi}\|\|_{1}$', labelpad=0)
 ax2.grid(alpha=0.3)
 
 #################### 
-ax3 = fig.add_subplot(223)
-size_vals = np.array([200, 400, 600, 800, 1000])
-num_sizes = size_vals.shape[0]
-time_mean = np.mean(size_time_traces, axis = 0) * 1000
-time_se = np.std(size_time_traces, axis = 0) / np.sqrt(size_time_traces.shape[0]) * 1000
+if size_time_traces is not None:
+    ax3 = fig.add_subplot(223)
+    size_vals = np.array([200, 400, 600, 800, 1000])
+    num_sizes = size_vals.shape[0]
+    time_mean = np.mean(size_time_traces, axis = 0) * 1000
+    time_se = np.std(size_time_traces, axis = 0) / np.sqrt(size_time_traces.shape[0]) * 1000
 
-plot_with_shades(ax3, size_vals, time_mean[np.arange(num_sizes), 0], time_se[np.arange(num_sizes), 0], color=alg_colors[0], label = "VI", linestyle='--')
-plot_with_shades(ax3, size_vals, time_mean[np.arange(num_sizes), 1], time_se[np.arange(num_sizes), 1], color=alg_colors[1], label = "Anderson VI", linestyle='dashdot')
-plot_with_shades(ax3, size_vals, time_mean[np.arange(num_sizes), 2], time_se[np.arange(num_sizes), 2], color=alg_colors[2], label = "S-AVI", linestyle='dashdot')
-plot_with_shades(ax3, size_vals, time_mean[np.arange(num_sizes), 3], time_se[np.arange(num_sizes), 3], color=alg_colors[3], label = "PID VI", linestyle='dashdot')
-plot_with_shades(ax3, size_vals, time_mean[np.arange(num_sizes), 4], time_se[np.arange(num_sizes), 4], color=alg_colors[4], label = "Anc VI", linestyle='dashdot')
-plot_with_shades(ax3, size_vals, time_mean[np.arange(num_sizes), 5], time_se[np.arange(num_sizes), 5], color=alg_colors[5], label = "DDVI (AutoQR)", linestyle='-')
-plot_with_shades(ax3, size_vals, time_mean[np.arange(num_sizes), 6, ], time_se[np.arange(num_sizes), 6, ], color=rank_colors[1], label = "DDVI (rank-$1$)", linestyle='-')
-plot_with_shades(ax3, size_vals, time_mean[np.arange(num_sizes), 7, ], time_se[np.arange(num_sizes), 7, ], color=rank_colors[2], label = "DDVI (rank-$2$)", linestyle='-')
-ax3.set_xlabel('Number of States')
-ax3.grid(alpha=0.3)
-ax3.set_ylim(0, 1000)
-ax3.set_xlim(200, 1000)
-ax3.set_yticks([0, 200, 400, 600, 800, 1000])
-ax3.set_ylabel('Wall Clock (ms)', labelpad=3)
+    plot_with_shades(ax3, size_vals, time_mean[np.arange(num_sizes), 0], time_se[np.arange(num_sizes), 0], color=alg_colors[0], label = "VI", linestyle='--')
+    plot_with_shades(ax3, size_vals, time_mean[np.arange(num_sizes), 1], time_se[np.arange(num_sizes), 1], color=alg_colors[1], label = "Anderson VI", linestyle='dashdot')
+    plot_with_shades(ax3, size_vals, time_mean[np.arange(num_sizes), 2], time_se[np.arange(num_sizes), 2], color=alg_colors[2], label = "S-AVI", linestyle='dashdot')
+    plot_with_shades(ax3, size_vals, time_mean[np.arange(num_sizes), 3], time_se[np.arange(num_sizes), 3], color=alg_colors[3], label = "PID VI", linestyle='dashdot')
+    plot_with_shades(ax3, size_vals, time_mean[np.arange(num_sizes), 4], time_se[np.arange(num_sizes), 4], color=alg_colors[4], label = "Anc VI", linestyle='dashdot')
+    plot_with_shades(ax3, size_vals, time_mean[np.arange(num_sizes), 5], time_se[np.arange(num_sizes), 5], color=alg_colors[5], label = "DDVI (AutoQR)", linestyle='-')
+    plot_with_shades(ax3, size_vals, time_mean[np.arange(num_sizes), 6, ], time_se[np.arange(num_sizes), 6, ], color=rank_colors[1], label = "DDVI (rank-$1$)", linestyle='-')
+    plot_with_shades(ax3, size_vals, time_mean[np.arange(num_sizes), 7, ], time_se[np.arange(num_sizes), 7, ], color=rank_colors[2], label = "DDVI (rank-$2$)", linestyle='-')
+    ax3.set_xlabel('Number of States')
+    ax3.grid(alpha=0.3)
+    ax3.set_ylim(0, 1000)
+    ax3.set_xlim(200, 1000)
+    ax3.set_yticks([0, 200, 400, 600, 800, 1000])
+    ax3.set_ylabel('Wall Clock (ms)', labelpad=3)
 
 #################### 
-horizon_vals = np.array([100, 200, 300, 400, 500, 600, 700, 800, 900, 1000])
-num_horizons = horizon_vals.shape[0]
+if horizon_time_traces is not None:
+    horizon_vals = np.array([100, 200, 300, 400, 500, 600, 700, 800, 900, 1000])
+    num_horizons = horizon_vals.shape[0]
 
 
-ax4 = fig.add_subplot(224)
-time_mean = np.mean(horizon_time_traces, axis = 0) * 1000
-time_se = np.std(horizon_time_traces, axis = 0) / np.sqrt(horizon_time_traces.shape[0]) * 1000
+    ax4 = fig.add_subplot(224)
+    time_mean = np.mean(horizon_time_traces, axis = 0) * 1000
+    time_se = np.std(horizon_time_traces, axis = 0) / np.sqrt(horizon_time_traces.shape[0]) * 1000
 
-plot_with_shades(ax4, horizon_vals, time_mean[np.arange(num_horizons), 0], time_se[np.arange(num_horizons), 0], color=alg_colors[0], label = "VI", linestyle='--')
-plot_with_shades(ax4, horizon_vals, time_mean[np.arange(num_horizons), 1], time_se[np.arange(num_horizons), 1], color=alg_colors[1], label = "Anderson VI", linestyle='dashdot')
-plot_with_shades(ax4, horizon_vals, time_mean[np.arange(num_horizons), 2], time_se[np.arange(num_horizons), 2], color=alg_colors[2], label = "S-AVI", linestyle='dashdot')
-plot_with_shades(ax4, horizon_vals, time_mean[np.arange(num_horizons), 3], time_se[np.arange(num_horizons), 3], color=alg_colors[3], label = "PID VI", linestyle='dashdot')
-plot_with_shades(ax4, horizon_vals, time_mean[np.arange(num_horizons), 4], time_se[np.arange(num_horizons), 4], color=alg_colors[4], label = "Anc VI", linestyle='dashdot')
-plot_with_shades(ax4, horizon_vals, time_mean[np.arange(num_horizons), 5], time_se[np.arange(num_horizons), 5], color=alg_colors[5], label = "DDVI with AutoPI", linestyle='-')
-plot_with_shades(ax4, horizon_vals, time_mean[np.arange(num_horizons), 6], time_se[np.arange(num_horizons), 6, ], color=rank_colors[1], label = "DDVI (rank-$1$)", linestyle='-')
-plot_with_shades(ax4, horizon_vals, time_mean[np.arange(num_horizons), 7], time_se[np.arange(num_horizons), 7, ], color=rank_colors[2], label = "DDVI (rank-$2$)", linestyle='-')
+    plot_with_shades(ax4, horizon_vals, time_mean[np.arange(num_horizons), 0], time_se[np.arange(num_horizons), 0], color=alg_colors[0], label = "VI", linestyle='--')
+    plot_with_shades(ax4, horizon_vals, time_mean[np.arange(num_horizons), 1], time_se[np.arange(num_horizons), 1], color=alg_colors[1], label = "Anderson VI", linestyle='dashdot')
+    plot_with_shades(ax4, horizon_vals, time_mean[np.arange(num_horizons), 2], time_se[np.arange(num_horizons), 2], color=alg_colors[2], label = "S-AVI", linestyle='dashdot')
+    plot_with_shades(ax4, horizon_vals, time_mean[np.arange(num_horizons), 3], time_se[np.arange(num_horizons), 3], color=alg_colors[3], label = "PID VI", linestyle='dashdot')
+    plot_with_shades(ax4, horizon_vals, time_mean[np.arange(num_horizons), 4], time_se[np.arange(num_horizons), 4], color=alg_colors[4], label = "Anc VI", linestyle='dashdot')
+    plot_with_shades(ax4, horizon_vals, time_mean[np.arange(num_horizons), 5], time_se[np.arange(num_horizons), 5], color=alg_colors[5], label = "DDVI with AutoPI", linestyle='-')
+    plot_with_shades(ax4, horizon_vals, time_mean[np.arange(num_horizons), 6], time_se[np.arange(num_horizons), 6, ], color=rank_colors[1], label = "DDVI (rank-$1$)", linestyle='-')
+    plot_with_shades(ax4, horizon_vals, time_mean[np.arange(num_horizons), 7], time_se[np.arange(num_horizons), 7, ], color=rank_colors[2], label = "DDVI (rank-$2$)", linestyle='-')
 
 
-ax4.set_xlabel(r'Horizon ($1/(1-\gamma)$)')
-ax4.set_ylim(0, 250)
-ax4.set_yticks([0, 50, 100, 150, 200, 250])
-ax4.set_xlim(100, 1000)
-ax4.set_ylabel('Wall Clock (ms)', labelpad=8)
-ax4.grid(alpha=0.3)
+    ax4.set_xlabel(r'Horizon ($1/(1-\gamma)$)')
+    ax4.set_ylim(0, 250)
+    ax4.set_yticks([0, 50, 100, 150, 200, 250])
+    ax4.set_xlim(100, 1000)
+    ax4.set_ylabel('Wall Clock (ms)', labelpad=8)
+    ax4.grid(alpha=0.3)
 
 
 handles, labels = ax1.get_legend_handles_labels()
@@ -152,5 +167,5 @@ plt.subplots_adjust(left=0.08,
                         top=0.99,
                         wspace=0.3,
                         hspace=0.25)
-plt.savefig(f"planning/output/Comparison.pdf", tight_layout=True)
-plt.savefig(f"planning/output/Comparison.png", tight_layout=True)
+plt.savefig(f"planning/output/Comparison.pdf")
+plt.savefig(f"planning/output/Comparison.png")

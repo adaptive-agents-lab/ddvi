@@ -41,23 +41,6 @@ def run_dyna_pe(inputs):
         shutil.copyfile(src=config_path, dst=f"{dyna_out_dir}/config.yaml")
         dyna_pe.run(num_iterations, output_filename=f"{dyna_out_dir}/V_trace_{trial}.npy")
 
-def run_msdyna_pe(inputs):
-    mdp, policy, config, config_path, alpha_vals, alpha_indices, num_iterations, trial, exp_dir, model_class  = inputs["mdp"], inputs["policy"], inputs["config"], inputs["config_path"], inputs["alpha_vals"], inputs["alpha_indices"], inputs["num_iterations"], inputs["trial"], inputs["exp_dir"], inputs["model_class"]
-    random.seed(trial)
-    np.random.seed(trial)
-    for i in range(len(alpha_indices)):
-        alpha_index = alpha_indices[i]
-        alpha = alpha_vals[alpha_index]
-        msdyna_out_dir = get_default_alg_output_dir(config, "exp_pe_sample", "msdyna_pe", smoothing_param=alpha, exp_dir=exp_dir)
-        msdyna_pe = MSDyna_PE(mdp, policy, model_class(mdp.num_states(), mdp.num_actions(), alpha))
-        lr_scheduler = LearningRate(config["exp_pe_lr_type"],
-                                    config["exp_pe_msdyna_lr"][i],
-                                    config["exp_pe_msdyna_lr_delay"],
-                                    config["exp_pe_msdyna_gamma"][i])
-        shutil.copyfile(src=config_path, dst=f"{msdyna_out_dir}/config.yaml")
-        msdyna_pe.run(num_iterations, lr_scheduler=lr_scheduler,
-                      output_filename=f"{msdyna_out_dir}/V_trace_{trial}.npy")
-
 def run_ddtd_pe(inputs):
     rank, mdp, policy, config, config_path, alpha_vals, alpha_indices, num_iterations, trial, exp_dir, model_class  = inputs["rank"], inputs["mdp"], inputs["policy"], inputs["config"], inputs["config_path"], inputs["alpha_vals"], inputs["alpha_indices"], inputs["num_iterations"], inputs["trial"], inputs["exp_dir"], inputs["model_class"]
     random.seed(trial)
